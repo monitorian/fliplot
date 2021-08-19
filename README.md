@@ -24,5 +24,5 @@ Here are the basic steps to start development.
 ```bash
  export FLASK_APP=flask_app
  export FLASK_ENV=development
- flask run 
+ flask run --host (development server IP address)
 ```

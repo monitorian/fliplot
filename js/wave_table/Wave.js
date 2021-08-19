@@ -31,6 +31,8 @@ export class Wave {
     /* Debug variables */
     this.dbg_enableUpdateRenderRange = true;
     this.dbg_enableRender = true;
+
+    this.save_time= 0;
   }
 
   init() {
@@ -80,6 +82,9 @@ export class Wave {
 
     mainGr.append('g')
       .attr('id', 'cursorGr');
+
+      mainGr.append('g')
+      .attr('id', 'cursorGr1');      
   }
 
   reload(render=false) {
@@ -151,10 +156,18 @@ export class Wave {
       .attr('y1', 0)
       .attr('y2', config.rowHeight * rowsToPlot.length);
 
+    d3.select('#cursorGr1').append('line')
+      .classed('cursor', true)
+      .attr('id', 'main-cursor1')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('y1', 0)
+      .attr('y2', config.rowHeight * rowsToPlot.length);      
+    
     const self = this;
     d3.select('#mainGr').on("click", function () {
       const click_time = self.timeScale.invert(d3.mouse(this)[0]);
-      self.waveTable.moveCursorTo(click_time);
+      self.waveTable.moveCursorTo(self.waveTable.cursor_num, click_time);
+      self.save_time = click_time;      
     });
 
     if(render){
@@ -407,6 +420,9 @@ export class Wave {
     d3.selectAll('#cursorGr')
       .attr('transform', 'scale(' + d3.event.transform.k + ',1)');
 
+      d3.selectAll('#cursorGr1')
+      .attr('transform', 'scale(' + d3.event.transform.k + ',1)');
+
     d3.selectAll('.bus-value')
       .attr('x', d => this.timeScale(d[WAVEARRAY].getTimeAtI(d[IDX]) + d[WAVEARRAY].getTimeAtI(d[IDX] + 1)) / 2)
 
@@ -423,8 +439,16 @@ export class Wave {
     this.updateAxis();
   }
 
-  moveCursorTo(simTime) {
-    const cursor = d3.select('#cursorGr').select('#main-cursor');
+  moveCursorTo(cursor_num, simTime) {
+    var cursor;
+    
+    if(cursor_num == 0){
+      cursor = d3.select('#cursorGr').select('#main-cursor');
+    }else if(cursor_num == 1){
+      cursor = d3.select('#cursorGr1').select('#main-cursor1');
+    }else{
+      console.error("Could not get cursor number.");
+    }
 
     if (simTime >= 0) {
       cursor.datum(simTime)
@@ -435,8 +459,13 @@ export class Wave {
       .attr('x2', d => d);
   }
 
-  getCursorTime() {
-    var t = d3.select('#main-cursor').datum();
+  getCursorTime(cursor_num) {
+    // if(cursor_num == 0){
+      var t = d3.select('#main-cursor').datum();
+    // }
+    // else if(cursor_num == 1){
+    //   var t = d3.select('#main-cursor1').datum();
+    // }
     console.log(t);
     return t;
   }

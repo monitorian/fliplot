@@ -260,6 +260,13 @@ text.bus-value{
   shape-rendering: crispedges;
 }
 
+#main-cursor1{
+  stroke-width: 3;
+  stroke: #f0f;
+  stroke-opacity: 0.8;
+  shape-rendering: crispedges;
+}
+
 rect.signal-highlighter {
   opacity: 0;
 }

@@ -14,7 +14,7 @@ function showSignals() {
   waveTable.reload();
 
   setTimeout(() => {
-    waveTable.moveCursorTo(0);
+    waveTable.moveCursorTo(waveTable.cursor_num, 0);
     waveTable.wave.zoomAutoscale();
   }, 0);
 }
@@ -57,25 +57,33 @@ $("#remove-all").click(() => {
 });
 
 $("#cursor-to-0").click(() => {
-  waveTable.moveCursorTo(0);
+  waveTable.moveCursorTo(waveTable.cursor_num, 0);
 });
 
 $("#cursor-to-end").click(() => {
-  waveTable.moveCursorTo(simDB.now);
+  waveTable.moveCursorTo(waveTable.cursor_num, simDB.now);
+});
+
+$("#cursor-0").click(() => {
+  waveTable.cursor_num = 0;
+});
+
+$("#cursor-1").click(() => {
+  waveTable.cursor_num = 1;
 });
 
 $("#cursor-to-prev-transition").click(() => {
-  const tCurr = waveTable.getCursorTime();
+  const tCurr = waveTable.getCursorTime(waveTable.cursor_num);
   const sig = waveTable.getActiveRow(false);
   const tNew = sig.simObj.getTimeAnyTransition(tCurr, -1);
-  waveTable.moveCursorTo(tNew);
+  waveTable.moveCursorTo(waveTable.cursor_num, tNew);
 });
 
 $("#cursor-to-next-transition").click(() => {
-  const tCurr = waveTable.getCursorTime();
+  const tCurr = waveTable.getCursorTime(waveTable.cursor_num);
   const sig = waveTable.getActiveRow(false);
   const tNew = sig.simObj.getTimeAnyTransition(tCurr, +1);
-  waveTable.moveCursorTo(tNew);
+  waveTable.moveCursorTo(waveTable.cursor_num, tNew);
 });
 
 $(".resizable-col").resizable({

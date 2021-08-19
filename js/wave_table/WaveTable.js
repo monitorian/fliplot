@@ -18,6 +18,8 @@ export class WaveTable {
     this.valueCol = new ValueCol(this);
     this.wave = new Wave(this);
 
+    this.cursor_num = 0;
+
     $('#main-container-scroll-y')
       .scroll( () => this.wave.updateAxis() );
     $(window)
@@ -201,13 +203,13 @@ export class WaveTable {
     });
   }
 
-  moveCursorTo(time){
-    this.wave.moveCursorTo(time);
+  moveCursorTo(cursor_num, time){
+    this.wave.moveCursorTo(cursor_num, time);
     this.valueCol.showValuesAt(time);
   }
 
-  getCursorTime() {
-    return this.wave.getCursorTime();
+  getCursorTime(cursor_num) {
+    return this.wave.getCursorTime(cursor_num);
   }
 
   
